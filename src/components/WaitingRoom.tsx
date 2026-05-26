@@ -18,7 +18,7 @@ export default function WaitingRoom({ players, roomCode }: WaitingRoomProps) {
           {roomCode}
         </p>
         <div className="kimetsu-divider text-xs my-2">
-          <span className="text-[#c8a252]">刃</span>
+          <span className="text-[#c8a252]">⚔️</span>
         </div>
         <p className="text-sm text-[#5a3a10] font-brush">この合言葉を仲間に伝えよ</p>
       </div>
@@ -27,7 +27,7 @@ export default function WaitingRoom({ players, roomCode }: WaitingRoomProps) {
       <div className="washi-card rounded-2xl p-6">
         <div className="flex justify-between items-center mb-4">
           <h3 className="font-extrabold text-[#1a1208] font-brush tracking-wider">
-            刃 隊員一覧
+            ⚔️ 隊員一覧
           </h3>
           <span className="text-sm text-[#5a3a10] font-brush">{players.length}名</span>
         </div>

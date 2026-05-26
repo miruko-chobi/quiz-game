@@ -75,7 +75,7 @@ export default function HomePage() {
             鬼滅クイズ
           </h1>
           <div className="kimetsu-divider text-xs my-3">
-            <span>刃</span>
+            <span>⚔️</span>
           </div>
           <p className="text-[#c8a252] text-sm tracking-widest font-brush">
             鬼の頸を斬れ！
@@ -89,7 +89,7 @@ export default function HomePage() {
               disabled={loading}
               className="btn-tanjiro w-full py-4 rounded-xl text-lg tracking-wider"
             >
-              {loading ? '戦場を準備中...' : '刃 戦場を開く（GM）'}
+              {loading ? '戦場を準備中...' : '⚔️ 戦場を開く（GM）'}
             </button>
             <button
               onClick={() => setMode('join')}

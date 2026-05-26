@@ -40,7 +40,7 @@ export default function ResultScreen({ player, allPlayers, answers }: ResultScre
 
       {/* 各問の正誤 */}
       <div className="washi-card rounded-2xl p-5">
-        <h3 className="font-extrabold text-[#1a1208] mb-4 font-brush tracking-wider">刃 各問の戦績</h3>
+        <h3 className="font-extrabold text-[#1a1208] mb-4 font-brush tracking-wider">⚔️ 各問の戦績</h3>
         <div className="space-y-3">
           {QUIZ_DATA.map((q, i) => {
             const ans = answers.find((a) => a.question_index === i)

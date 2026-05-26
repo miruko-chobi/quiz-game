@@ -131,7 +131,7 @@ export default function JoinPage() {
           {/* ニックネーム入力 */}
           <div className="washi-card rounded-2xl p-6 space-y-4">
             <h2 className="font-extrabold text-[#1a1208] text-lg font-brush tracking-wider">
-              刃 隊士の名を入力せよ
+              ⚔️ 隊士の名を入力せよ
             </h2>
             <input
               type="text"

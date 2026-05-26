@@ -154,7 +154,7 @@ export default function GmPage() {
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-extrabold text-[#c8a252] font-brush title-glow">
-              刃 指令官ダッシュボード
+              ⚔️ 指令官ダッシュボード
             </h1>
             <p className="text-sm text-[#7ab07a] font-brush mt-0.5">
               合言葉：<span className="font-extrabold tracking-[0.2em] text-[#f5ede0]">{code}</span>
@@ -195,7 +195,7 @@ export default function GmPage() {
             disabled={loading || players.length === 0}
             className="btn-tanjiro w-full py-4 rounded-xl text-lg tracking-wider"
           >
-            {loading ? '準備中...' : `刃 戦いを始める（${players.length}名参加中）`}
+            {loading ? '準備中...' : `⚔️ 戦いを始める（${players.length}名参加中）`}
           </button>
         )}
 
@@ -204,7 +204,7 @@ export default function GmPage() {
           <div className="space-y-2">
             {allAnswered ? (
               <p className="text-center text-[#7adc8a] text-sm font-bold font-brush">
-                全員回答済み！次に進めるたい 刃
+                全員回答済み！次に進めるたい ⚔️
               </p>
             ) : (
               <p className="text-center text-[#c8a252] text-sm font-brush">
@@ -220,7 +220,7 @@ export default function GmPage() {
                 ? '処理中...'
                 : currentQuestion + 1 >= TOTAL_QUESTIONS
                 ? '🏆 最終結果を発表する！'
-                : `刃 次の問題へ（第 ${currentQuestion + 2} 問）`}
+                : `⚔️ 次の問題へ（第 ${currentQuestion + 2} 問）`}
             </button>
           </div>
         )}

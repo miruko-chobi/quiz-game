@@ -20,7 +20,7 @@ export default function PlayerList({
   return (
     <div className="washi-card rounded-2xl p-5">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-extrabold text-[#1a1208] font-brush tracking-wider">刃 隊員一覧</h2>
+        <h2 className="text-lg font-extrabold text-[#1a1208] font-brush tracking-wider">⚔️ 隊員一覧</h2>
         <span className="text-sm text-[#5a3a10] font-brush">
           {answeredPlayerIds.length} / {players.length} 回答済
         </span>
