@@ -197,15 +197,19 @@ export default function GmPage() {
 
         {status === 'playing' && (
           <div className="space-y-2">
-            {allAnswered && (
+            {allAnswered ? (
               <p className="text-center text-green-600 text-sm font-medium">
-                全員回答済み！次の問題に進められるよ
+                全員回答済み！次に進めるたい
+              </p>
+            ) : (
+              <p className="text-center text-gray-500 text-sm">
+                回答待ち… {answeredPlayerIds.length} / {players.length} 人
               </p>
             )}
             <button
               onClick={nextQuestion}
-              disabled={loading}
-              className="w-full py-4 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+              disabled={loading || !allAnswered}
+              className="w-full py-4 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {loading
                 ? '処理中...'
@@ -213,9 +217,6 @@ export default function GmPage() {
                 ? '結果発表！'
                 : `次の問題へ（${currentQuestion + 2} / ${TOTAL_QUESTIONS}）`}
             </button>
-            <p className="text-xs text-gray-400 text-center">
-              ※ 全員が回答していなくても進められるばい
-            </p>
           </div>
         )}
 
