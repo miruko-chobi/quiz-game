@@ -10,15 +10,19 @@ interface QuizCardProps {
   onSelect: (index: number) => void
 }
 
-export default function QuizCard({ question, selectedChoice, submitted, onSelect }: QuizCardProps) {
-  const choiceLabels = ['A', 'B', 'C', 'D']
+const CHOICE_KANJI = ['壱', '弐', '参', '肆']
 
+export default function QuizCard({ question, selectedChoice, submitted, onSelect }: QuizCardProps) {
   return (
     <div className="w-full max-w-2xl mx-auto">
-      <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
-        <p className="text-xl font-bold text-gray-800 leading-relaxed">{question.question}</p>
+
+      {/* 問題文 */}
+      <div className="washi-card rounded-2xl p-6 mb-5">
+        <p className="text-lg font-bold text-[#1a1208] leading-relaxed font-brush">
+          {question.question}
+        </p>
         {question.image && (
-          <div className="mt-4 rounded-xl overflow-hidden">
+          <div className="mt-4 rounded-xl overflow-hidden border border-[#c8a252]">
             <Image
               src={question.image}
               alt="クイズ画像"
@@ -30,35 +34,35 @@ export default function QuizCard({ question, selectedChoice, submitted, onSelect
         )}
       </div>
 
+      {/* 選択肢 */}
       <div className={`grid gap-3 ${question.type === '2choice' ? 'grid-cols-1' : 'grid-cols-2'}`}>
         {question.choices.map((choice, index) => {
           const isSelected = selectedChoice === index
-          let btnClass =
-            'flex items-center gap-3 p-4 rounded-xl border-2 text-left font-semibold transition-all '
-
+          let className = 'choice-btn flex items-center gap-3 p-4 rounded-xl text-left font-bold'
           if (submitted) {
-            if (isSelected) {
-              btnClass += 'border-indigo-500 bg-indigo-100 text-indigo-800 cursor-default'
-            } else {
-              btnClass += 'border-gray-200 bg-gray-50 text-gray-400 cursor-default'
-            }
+            className += isSelected ? ' selected submitted' : ' submitted opacity-60'
           } else if (isSelected) {
-            btnClass += 'border-indigo-500 bg-indigo-50 text-indigo-700 scale-[1.02]'
-          } else {
-            btnClass += 'border-gray-200 bg-white text-gray-700 hover:border-indigo-300 hover:bg-indigo-50 cursor-pointer'
+            className += ' selected'
           }
 
           return (
             <button
               key={index}
-              className={btnClass}
+              className={className}
               onClick={() => !submitted && onSelect(index)}
               disabled={submitted}
             >
-              <span className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-sm">
-                {choiceLabels[index]}
+              <span
+                className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center font-extrabold text-sm font-brush"
+                style={
+                  isSelected
+                    ? { background: 'rgba(255,255,255,0.25)', color: '#f5ede0', border: '1px solid rgba(255,255,255,0.4)' }
+                    : { background: 'linear-gradient(135deg, #1a4228, #0d2818)', color: '#c8a252', border: '1px solid #c8a252' }
+                }
+              >
+                {CHOICE_KANJI[index]}
               </span>
-              <span>{choice}</span>
+              <span className="font-brush text-sm leading-snug">{choice}</span>
             </button>
           )
         })}

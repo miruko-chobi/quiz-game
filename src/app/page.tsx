@@ -28,7 +28,7 @@ export default function HomePage() {
 
     const { error: err } = await supabase.from('rooms').insert({ code })
     if (err) {
-      setError('ルーム作成に失敗したたい。もう一度試してみてくれんね。')
+      setError('戦場の開設に失敗したたい。もう一度試してみてくれんね。')
       setLoading(false)
       return
     }
@@ -49,12 +49,12 @@ export default function HomePage() {
       .maybeSingle()
 
     if (!data) {
-      setError('そのルームコードは見つからなかったたい。確認してみてくれんね。')
+      setError('その合言葉は見つからなかったたい。確認してみてくれんね。')
       setLoading(false)
       return
     }
     if (data.status === 'finished') {
-      setError('このルームはもう終了しとうよ。')
+      setError('この戦いはもう終わっとうよ。')
       setLoading(false)
       return
     }
@@ -64,10 +64,22 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-6">
-      <div className="w-full max-w-sm space-y-4">
+      <div className="w-full max-w-sm space-y-5">
+
+        {/* タイトルエリア */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-extrabold text-indigo-600 mb-2">みんなでクイズ！</h1>
-          <p className="text-gray-500 text-sm">友達とリアルタイムで楽しもう</p>
+          <div className="text-sm tracking-[0.4em] text-[#c8a252] mb-2 font-brush">
+            ― 鬼殺隊 公認 ―
+          </div>
+          <h1 className="text-6xl font-extrabold title-glow font-brush mb-3 leading-tight">
+            鬼滅クイズ
+          </h1>
+          <div className="kimetsu-divider text-xs my-3">
+            <span>刃</span>
+          </div>
+          <p className="text-[#c8a252] text-sm tracking-widest font-brush">
+            鬼の頸を斬れ！
+          </p>
         </div>
 
         {mode === 'top' && (
@@ -75,24 +87,24 @@ export default function HomePage() {
             <button
               onClick={createRoom}
               disabled={loading}
-              className="w-full py-4 bg-indigo-600 text-white font-bold rounded-xl shadow hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+              className="btn-tanjiro w-full py-4 rounded-xl text-lg tracking-wider"
             >
-              {loading ? '作成中...' : 'ゲームを作成する（GM）'}
+              {loading ? '戦場を準備中...' : '刃 戦場を開く（GM）'}
             </button>
             <button
               onClick={() => setMode('join')}
-              className="w-full py-4 bg-white text-indigo-600 font-bold rounded-xl shadow border-2 border-indigo-200 hover:border-indigo-400 transition-colors"
+              className="btn-tomioka w-full py-4 rounded-xl text-lg tracking-wider"
             >
-              ゲームに参加する
+              🔥 戦に参加する
             </button>
           </div>
         )}
 
         {mode === 'join' && (
           <div className="space-y-3">
-            <div className="bg-white rounded-xl shadow p-5">
-              <label className="block text-sm font-medium text-gray-600 mb-2">
-                ルームコードを入力
+            <div className="washi-card rounded-xl p-5">
+              <label className="block text-sm font-bold mb-2 text-[#5a3a10] font-brush tracking-wider">
+                合言葉（ルームコード）を入力
               </label>
               <input
                 type="text"
@@ -101,19 +113,19 @@ export default function HomePage() {
                 onChange={(e) => setRoomCode(e.target.value.toUpperCase())}
                 onKeyDown={(e) => e.key === 'Enter' && joinRoom()}
                 placeholder="XXXX"
-                className="w-full text-center text-3xl font-extrabold tracking-widest border-2 border-gray-200 rounded-lg p-3 focus:outline-none focus:border-indigo-400"
+                className="washi-input w-full text-center text-4xl font-extrabold tracking-[0.4em] rounded-lg p-3"
               />
             </div>
             <button
               onClick={joinRoom}
               disabled={loading || roomCode.length < 4}
-              className="w-full py-4 bg-indigo-600 text-white font-bold rounded-xl shadow hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+              className="btn-tomioka w-full py-4 rounded-xl text-lg tracking-wider"
             >
-              {loading ? '確認中...' : '参加する'}
+              {loading ? '確認中...' : '🔥 参加する'}
             </button>
             <button
               onClick={() => { setMode('top'); setError('') }}
-              className="w-full py-3 text-gray-500 text-sm hover:text-gray-700"
+              className="w-full py-3 text-[#c8a252] text-sm hover:text-[#e8d080] transition-colors font-brush tracking-wider"
             >
               ← 戻る
             </button>
@@ -121,8 +133,14 @@ export default function HomePage() {
         )}
 
         {error && (
-          <p className="text-red-500 text-sm text-center bg-red-50 rounded-lg p-3">{error}</p>
+          <div className="washi-card rounded-xl p-3 border-[#8c1c2f]">
+            <p className="text-[#8c1c2f] text-sm text-center font-bold">{error}</p>
+          </div>
         )}
+
+        <div className="text-center text-[#3a5a3a] text-xs mt-4 font-brush">
+          全集中の呼吸で挑め
+        </div>
       </div>
     </main>
   )

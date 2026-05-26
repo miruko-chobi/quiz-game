@@ -9,31 +9,52 @@ interface WaitingRoomProps {
 
 export default function WaitingRoom({ players, roomCode }: WaitingRoomProps) {
   return (
-    <div className="w-full max-w-md mx-auto text-center space-y-6">
-      <div className="bg-white rounded-2xl shadow-lg p-8">
-        <p className="text-sm text-gray-500 mb-2">ルームコード</p>
-        <p className="text-5xl font-extrabold tracking-widest text-indigo-600 mb-2">{roomCode}</p>
-        <p className="text-sm text-gray-400">このコードを友達に共有してね</p>
+    <div className="w-full max-w-md mx-auto text-center space-y-5">
+
+      {/* 合言葉表示 */}
+      <div className="washi-card rounded-2xl p-8">
+        <p className="text-xs text-[#8a6a30] mb-2 tracking-[0.3em] font-brush">― 合言葉 ―</p>
+        <p className="text-5xl font-extrabold tracking-[0.3em] text-[#8c1c2f] mb-3 font-brush">
+          {roomCode}
+        </p>
+        <div className="kimetsu-divider text-xs my-2">
+          <span className="text-[#c8a252]">刃</span>
+        </div>
+        <p className="text-sm text-[#5a3a10] font-brush">この合言葉を仲間に伝えよ</p>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-lg p-6">
+      {/* 参加者一覧 */}
+      <div className="washi-card rounded-2xl p-6">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="font-bold text-gray-700">参加中のプレイヤー</h3>
-          <span className="text-sm text-gray-500">{players.length}人</span>
+          <h3 className="font-extrabold text-[#1a1208] font-brush tracking-wider">
+            刃 隊員一覧
+          </h3>
+          <span className="text-sm text-[#5a3a10] font-brush">{players.length}名</span>
         </div>
+
         {players.length === 0 ? (
-          <p className="text-gray-400 text-sm py-4">まだ誰も参加していないたい...</p>
+          <p className="text-[#8a6a30] text-sm py-4 font-brush">
+            仲間の到着を待っとうよ、、、
+          </p>
         ) : (
           <ul className="space-y-2">
             {players.map((p) => (
-              <li key={p.id} className="flex items-center gap-2 p-2 rounded-lg bg-gray-50">
-                <span className="w-2 h-2 rounded-full bg-green-400" />
-                <span className="font-medium text-gray-700">{p.nickname}</span>
+              <li
+                key={p.id}
+                className="flex items-center gap-3 px-3 py-2 rounded-lg"
+                style={{ background: 'rgba(26, 66, 40, 0.08)', border: '1px solid rgba(200,162,82,0.3)' }}
+              >
+                <span className="w-2 h-2 rounded-full bg-[#1a8a40] shadow-[0_0_6px_#1a8a40]" />
+                <span className="font-bold text-[#1a1208] font-brush">{p.nickname}</span>
               </li>
             ))}
           </ul>
         )}
-        <p className="text-xs text-gray-400 mt-4">ゲームマスターが開始するまでお待ちください</p>
+
+        <div className="kimetsu-divider text-xs mt-4 mb-2">
+          <span className="text-[#c8a252] text-xs">◆</span>
+        </div>
+        <p className="text-xs text-[#8a6a30] font-brush">指令官がゲームを開始するまでお待ちください</p>
       </div>
     </div>
   )

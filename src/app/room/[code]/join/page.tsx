@@ -29,7 +29,7 @@ export default function JoinPage() {
       .maybeSingle()
 
     if (!room) {
-      setError('ルームが見つからなかったたい。')
+      setError('その戦場は見つからなかったたい。')
       setLoading(false)
       return
     }
@@ -41,7 +41,7 @@ export default function JoinPage() {
       .single()
 
     if (err || !player) {
-      setError('参加に失敗したたい。')
+      setError('参戦に失敗したたい。')
       setLoading(false)
       return
     }
@@ -119,33 +119,42 @@ export default function JoinPage() {
     return (
       <main className="min-h-screen flex items-center justify-center p-6">
         <div className="w-full max-w-sm space-y-4">
-          <div className="text-center mb-6">
-            <p className="text-sm text-gray-500">ルームコード</p>
-            <p className="text-3xl font-extrabold tracking-widest text-indigo-600">{code}</p>
+
+          {/* 合言葉表示 */}
+          <div className="text-center mb-4">
+            <p className="text-xs text-[#c8a252] tracking-[0.3em] font-brush mb-1">― 合言葉 ―</p>
+            <p className="text-4xl font-extrabold tracking-[0.3em] text-[#f5ede0] title-glow font-brush">
+              {code}
+            </p>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-6 space-y-4">
-            <h2 className="font-bold text-gray-700 text-lg">ニックネームを入力</h2>
+          {/* ニックネーム入力 */}
+          <div className="washi-card rounded-2xl p-6 space-y-4">
+            <h2 className="font-extrabold text-[#1a1208] text-lg font-brush tracking-wider">
+              刃 隊士の名を入力せよ
+            </h2>
             <input
               type="text"
               maxLength={12}
               value={nickname}
               onChange={(e) => setNickname(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && joinGame()}
-              placeholder="例：たろう"
-              className="w-full border-2 border-gray-200 rounded-xl p-3 text-lg focus:outline-none focus:border-indigo-400"
+              placeholder="例：炭治郎"
+              className="washi-input w-full rounded-xl p-3 text-lg"
             />
             <button
               onClick={joinGame}
               disabled={loading || !nickname.trim()}
-              className="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+              className="btn-tomioka w-full py-3 rounded-xl tracking-wider"
             >
-              {loading ? '参加中...' : '参加する'}
+              {loading ? '参戦中...' : '🔥 参戦する'}
             </button>
           </div>
 
           {error && (
-            <p className="text-red-500 text-sm text-center bg-red-50 rounded-lg p-3">{error}</p>
+            <div className="washi-card rounded-xl p-3 border-[#8c1c2f]">
+              <p className="text-[#8c1c2f] text-sm text-center font-bold font-brush">{error}</p>
+            </div>
           )}
         </div>
       </main>

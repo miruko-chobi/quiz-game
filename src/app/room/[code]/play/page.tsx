@@ -17,7 +17,6 @@ export default function PlayPage() {
 
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [status, setStatus] = useState<'playing' | 'finished'>('playing')
-  // ★ selectedChoice = 選択中（未送信）、submitted = 送信済み
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null)
   const [submitted, setSubmitted] = useState(false)
   const [sending, setSending] = useState(false)
@@ -121,13 +120,11 @@ export default function PlayPage() {
     }
   }, [playerId, code, loadMyAnswers, loadAllPlayers])
 
-  // ★ 選択のみ（DBには送らない）
   function handleSelect(choice: number) {
     if (submitted) return
     setSelectedChoice(choice)
   }
 
-  // ★ 送信ボタンを押した時にDBに送信
   async function sendAnswer() {
     if (!playerId || !roomId || submitted || selectedChoice === null) return
     setSending(true)
@@ -159,7 +156,9 @@ export default function PlayPage() {
   if (!player) {
     return (
       <main className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-500">読み込み中...</p>
+        <div className="text-center">
+          <p className="text-[#c8a252] font-brush text-lg animate-pulse">全集中...</p>
+        </div>
       </main>
     )
   }
@@ -168,13 +167,14 @@ export default function PlayPage() {
     return (
       <main className="min-h-screen p-6 pb-12">
         <div className="max-w-2xl mx-auto">
-          <h1 className="text-2xl font-extrabold text-center text-indigo-600 mb-6">結果発表！</h1>
+          <h1 className="text-3xl font-extrabold text-center text-[#c8a252] mb-6 font-brush title-glow">
+            🏆 最終結果発表！
+          </h1>
           <ResultScreen player={player} allPlayers={allPlayers} answers={myAnswers} />
-          {/* ★ 最初に戻るボタン */}
           <div className="mt-6">
             <button
               onClick={() => router.push('/')}
-              className="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-colors"
+              className="btn-tomioka w-full py-3 rounded-xl tracking-wider"
             >
               🏠 最初の画面に戻る
             </button>
@@ -189,11 +189,23 @@ export default function PlayPage() {
   return (
     <main className="min-h-screen p-6">
       <div className="max-w-2xl mx-auto">
-        <div className="flex justify-between items-center mb-6">
-          <span className="text-sm text-gray-500">
-            問題 {currentQuestion + 1} / {QUIZ_DATA.length}
+
+        {/* ヘッダー */}
+        <div className="flex justify-between items-center mb-5">
+          <div className="flex items-center gap-2">
+            <span
+              className="text-xs px-3 py-1 rounded-full font-bold font-brush"
+              style={{ background: 'linear-gradient(135deg, #1a4228, #0d2818)', color: '#c8a252', border: '1px solid #c8a252' }}
+            >
+              第 {currentQuestion + 1} 問 / {QUIZ_DATA.length}
+            </span>
+          </div>
+          <span
+            className="text-sm font-bold text-[#c8a252] font-brush"
+            style={{ textShadow: '0 1px 4px rgba(0,0,0,0.8)' }}
+          >
+            刃 {player.nickname}
           </span>
-          <span className="text-sm font-medium text-indigo-600">{player.nickname}</span>
         </div>
 
         <QuizCard
@@ -203,26 +215,29 @@ export default function PlayPage() {
           onSelect={handleSelect}
         />
 
-        {/* ★ 選択済みかつ未送信の時に送信ボタンを表示 */}
+        {/* 回答送信ボタン */}
         {!submitted && selectedChoice !== null && (
-          <div className="mt-4">
+          <div className="mt-5">
             <button
               onClick={sendAnswer}
               disabled={sending}
-              className="w-full py-4 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 disabled:opacity-50 transition-colors text-lg"
+              className="btn-tomioka w-full py-4 rounded-xl text-lg tracking-wider"
             >
-              {sending ? '送信中...' : `「${question.choices[selectedChoice]}」で回答する`}
+              {sending ? '送信中...' : `🔥「${question.choices[selectedChoice]}」で攻める！`}
             </button>
-            <p className="text-xs text-gray-400 text-center mt-2">
+            <p className="text-xs text-[#7a9a7a] text-center mt-2 font-brush">
               ※ 送信前なら選び直せるたい
             </p>
           </div>
         )}
 
+        {/* 送信済み */}
         {submitted && (
-          <div className="mt-6 text-center bg-white rounded-xl shadow p-4">
-            <p className="text-gray-600 font-medium">回答を送信したたい！</p>
-            <p className="text-sm text-gray-400 mt-1">ゲームマスターが次の問題に進めるまで待っとってね</p>
+          <div className="mt-6 text-center washi-card rounded-xl p-4">
+            <p className="text-[#1a4228] font-bold font-brush">刃 回答を送った！</p>
+            <p className="text-sm text-[#5a3a10] mt-1 font-brush">
+              指令官が次の問題に進めるまで待っとってね
+            </p>
           </div>
         )}
       </div>

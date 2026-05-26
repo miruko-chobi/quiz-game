@@ -1,8 +1,160 @@
 @import "tailwindcss";
 
+/* ===== Kimetsu no Yaiba Theme ===== */
+
 body {
-  background: #f1f5f9;
-  color: #1e293b;
-  font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Arial, sans-serif;
+  /* 市松模様（炭治郎カラー：深緑×黒） */
+  background-color: #0d1a0e;
+  background-image: repeating-conic-gradient(#1a4228 0% 25%, #0d1a0e 0% 50%);
+  background-size: 28px 28px;
+  color: #f5ede0;
+  font-family: 'Shippori Mincho B1', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
   -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
 }
+
+/* ===== 和紙カード ===== */
+.washi-card {
+  background: linear-gradient(145deg, #f5ede0 0%, #ece0c8 60%, #e2d4b8 100%);
+  color: #1a1208;
+  border: 1.5px solid #c8a252;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* ===== フォント ===== */
+.font-brush {
+  font-family: 'Shippori Mincho B1', 'Hiragino Mincho ProN', serif;
+}
+
+/* ===== タイトルグロー ===== */
+.title-glow {
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.9), 0 0 40px rgba(200, 162, 82, 0.5);
+}
+
+/* ===== 金縁デコレーション ===== */
+.gold-border {
+  border: 2px solid #c8a252;
+  box-shadow: 0 0 0 1px rgba(200, 162, 82, 0.3);
+}
+
+/* ===== ボタン：炭治郎（深緑） ===== */
+.btn-tanjiro {
+  background: linear-gradient(135deg, #1a4228 0%, #0d2818 100%);
+  color: #f5ede0;
+  border: 2px solid #c8a252;
+  font-family: 'Shippori Mincho B1', serif;
+  font-weight: 700;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+.btn-tanjiro:hover:not(:disabled) {
+  background: linear-gradient(135deg, #235432 0%, #143520 100%);
+  border-color: #e8c070;
+  box-shadow: 0 4px 20px rgba(26, 66, 40, 0.6);
+  transform: translateY(-1px);
+}
+.btn-tanjiro:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===== ボタン：富岡（えんじ） ===== */
+.btn-tomioka {
+  background: linear-gradient(135deg, #8c1c2f 0%, #5a0f1f 100%);
+  color: #f5ede0;
+  border: 2px solid #c8a252;
+  font-family: 'Shippori Mincho B1', serif;
+  font-weight: 700;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+.btn-tomioka:hover:not(:disabled) {
+  background: linear-gradient(135deg, #a82540 0%, #72142a 100%);
+  border-color: #e8c070;
+  box-shadow: 0 4px 20px rgba(140, 28, 47, 0.6);
+  transform: translateY(-1px);
+}
+.btn-tomioka:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===== 選択肢ボタン ===== */
+.choice-btn {
+  background: linear-gradient(145deg, #f5ede0, #ece0c8);
+  color: #1a1208;
+  border: 1.5px solid #c8a252;
+  font-family: 'Shippori Mincho B1', serif;
+  transition: all 0.15s ease;
+}
+.choice-btn:hover:not(:disabled) {
+  background: linear-gradient(145deg, #ece4d0, #e0d0b8);
+  border-color: #8c1c2f;
+  box-shadow: 0 0 0 2px rgba(140, 28, 47, 0.25);
+}
+.choice-btn.selected {
+  background: linear-gradient(145deg, #8c1c2f, #6b1424);
+  color: #f5ede0;
+  border-color: #c8a252;
+  box-shadow: 0 0 0 2px rgba(200, 162, 82, 0.4);
+}
+.choice-btn.submitted {
+  opacity: 0.7;
+  cursor: default;
+}
+.choice-btn.submitted.selected {
+  opacity: 1;
+}
+
+/* ===== ステータスバッジ ===== */
+.badge-waiting {
+  background: linear-gradient(135deg, #7a5800, #5a4000);
+  color: #f0d070;
+  border: 1px solid #c8a252;
+}
+.badge-playing {
+  background: linear-gradient(135deg, #1a4228, #0d2818);
+  color: #7adda0;
+  border: 1px solid #3a8a50;
+}
+.badge-finished {
+  background: linear-gradient(135deg, #2a1a1a, #1a1010);
+  color: #a0a0a0;
+  border: 1px solid #505050;
+}
+
+/* ===== 入力フィールド ===== */
+.washi-input {
+  background: linear-gradient(145deg, #f5ede0, #ece0c8);
+  color: #1a1208;
+  border: 1.5px solid #c8a252;
+  font-family: 'Shippori Mincho B1', serif;
+}
+.washi-input:focus {
+  outline: none;
+  border-color: #8c1c2f;
+  box-shadow: 0 0 0 3px rgba(140, 28, 47, 0.2);
+}
+.washi-input::placeholder {
+  color: #8a7a60;
+}
+
+/* ===== 装飾セパレーター ===== */
+.kimetsu-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #c8a252;
+}
+.kimetsu-divider::before,
+.kimetsu-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #c8a252, transparent);
+}
+
+/* ===== スクロールバー ===== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0d1a0e; }
+::-webkit-scrollbar-thumb { background: #1a4228; border-radius: 3px; }
