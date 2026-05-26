@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { QUIZ_DATA, TOTAL_QUESTIONS } from '@/data/quiz'
 import PlayerList from '@/components/PlayerList'
@@ -9,6 +9,7 @@ import { Player, Answer } from '@/types'
 
 export default function GmPage() {
   const { code } = useParams<{ code: string }>()
+  const router = useRouter()
 
   const [roomId, setRoomId] = useState<string | null>(null)
   const [status, setStatus] = useState<'waiting' | 'playing' | 'finished'>('waiting')
@@ -17,6 +18,13 @@ export default function GmPage() {
   const [answers, setAnswers] = useState<Answer[]>([])
   const [loading, setLoading] = useState(false)
   const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null)
+  // ★ Realtimeコールバック内で常に最新の問題番号を参照するためのRef
+  const currentQuestionRef = useRef(0)
+
+  // currentQuestionが変わるたびにRefも更新
+  useEffect(() => {
+    currentQuestionRef.current = currentQuestion
+  }, [currentQuestion])
 
   const loadPlayers = useCallback(async (rid: string) => {
     const { data } = await supabase
@@ -55,6 +63,7 @@ export default function GmPage() {
       setRoomId(room.id)
       setStatus(room.status)
       setCurrentQuestion(room.current_question)
+      currentQuestionRef.current = room.current_question
       await loadPlayers(room.id)
       await loadAnswers(room.id, room.current_question)
 
@@ -69,8 +78,9 @@ export default function GmPage() {
         )
         .on(
           'postgres_changes',
+          // ★ room.current_question（古い値）ではなくRefで最新の問題番号を参照
           { event: 'INSERT', schema: 'public', table: 'answers', filter: `room_id=eq.${room.id}` },
-          () => loadAnswers(room.id, room.current_question)
+          () => loadAnswers(room.id, currentQuestionRef.current)
         )
         .subscribe()
     }
@@ -209,11 +219,12 @@ export default function GmPage() {
           </div>
         )}
 
+        {/* ★ 結果表示＋最初に戻るボタン */}
         {status === 'finished' && (
           <div className="bg-white rounded-2xl shadow-lg p-6 text-center">
             <p className="text-2xl font-bold text-indigo-600 mb-2">ゲーム終了！</p>
             <p className="text-gray-500 text-sm mb-4">各プレイヤーの画面に結果が表示されとうよ</p>
-            <div className="space-y-2">
+            <div className="space-y-2 mb-6">
               {[...players]
                 .sort((a, b) => b.score - a.score)
                 .map((p, i) => (
@@ -223,6 +234,12 @@ export default function GmPage() {
                   </div>
                 ))}
             </div>
+            <button
+              onClick={() => router.push('/')}
+              className="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-colors"
+            >
+              🏠 新しいゲームを始める
+            </button>
           </div>
         )}
       </div>

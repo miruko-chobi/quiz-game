@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useParams, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { QUIZ_DATA } from '@/data/quiz'
 import QuizCard from '@/components/QuizCard'
@@ -12,11 +13,14 @@ export default function PlayPage() {
   const { code } = useParams<{ code: string }>()
   const searchParams = useSearchParams()
   const playerId = searchParams.get('pid')
+  const router = useRouter()
 
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [status, setStatus] = useState<'playing' | 'finished'>('playing')
+  // ★ selectedChoice = 選択中（未送信）、submitted = 送信済み
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null)
   const [submitted, setSubmitted] = useState(false)
+  const [sending, setSending] = useState(false)
   const [player, setPlayer] = useState<Player | null>(null)
   const [allPlayers, setAllPlayers] = useState<Player[]>([])
   const [myAnswers, setMyAnswers] = useState<Answer[]>([])
@@ -117,18 +121,25 @@ export default function PlayPage() {
     }
   }, [playerId, code, loadMyAnswers, loadAllPlayers])
 
-  async function submitAnswer(choice: number) {
-    if (!playerId || !roomId || submitted) return
+  // ★ 選択のみ（DBには送らない）
+  function handleSelect(choice: number) {
+    if (submitted) return
     setSelectedChoice(choice)
+  }
+
+  // ★ 送信ボタンを押した時にDBに送信
+  async function sendAnswer() {
+    if (!playerId || !roomId || submitted || selectedChoice === null) return
+    setSending(true)
 
     const question = QUIZ_DATA[currentQuestion]
-    const isCorrect = choice === question.correct
+    const isCorrect = selectedChoice === question.correct
 
     const { error } = await supabase.from('answers').insert({
       room_id: roomId,
       player_id: playerId,
       question_index: currentQuestion,
-      selected_choice: choice,
+      selected_choice: selectedChoice,
       is_correct: isCorrect,
     })
 
@@ -142,6 +153,7 @@ export default function PlayPage() {
         setPlayer((prev) => prev ? { ...prev, score: prev.score + 1 } : prev)
       }
     }
+    setSending(false)
   }
 
   if (!player) {
@@ -158,6 +170,15 @@ export default function PlayPage() {
         <div className="max-w-2xl mx-auto">
           <h1 className="text-2xl font-extrabold text-center text-indigo-600 mb-6">結果発表！</h1>
           <ResultScreen player={player} allPlayers={allPlayers} answers={myAnswers} />
+          {/* ★ 最初に戻るボタン */}
+          <div className="mt-6">
+            <button
+              onClick={() => router.push('/')}
+              className="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-colors"
+            >
+              🏠 最初の画面に戻る
+            </button>
+          </div>
         </div>
       </main>
     )
@@ -179,8 +200,24 @@ export default function PlayPage() {
           question={question}
           selectedChoice={selectedChoice}
           submitted={submitted}
-          onSelect={submitAnswer}
+          onSelect={handleSelect}
         />
+
+        {/* ★ 選択済みかつ未送信の時に送信ボタンを表示 */}
+        {!submitted && selectedChoice !== null && (
+          <div className="mt-4">
+            <button
+              onClick={sendAnswer}
+              disabled={sending}
+              className="w-full py-4 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 disabled:opacity-50 transition-colors text-lg"
+            >
+              {sending ? '送信中...' : `「${question.choices[selectedChoice]}」で回答する`}
+            </button>
+            <p className="text-xs text-gray-400 text-center mt-2">
+              ※ 送信前なら選び直せるたい
+            </p>
+          </div>
+        )}
 
         {submitted && (
           <div className="mt-6 text-center bg-white rounded-xl shadow p-4">
