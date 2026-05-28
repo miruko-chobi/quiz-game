@@ -69,7 +69,7 @@ export default function HomePage() {
         style={{ position: 'fixed', inset: 0, zIndex: 0 }}
       >
         <Image
-          src="/assets/title_background.png"
+          src="/assets/title_background.jpg"
           alt=""
           fill
           className="object-cover"
