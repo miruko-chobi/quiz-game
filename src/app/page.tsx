@@ -54,90 +54,63 @@ export default function HomePage() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden">
+    <main className="relative overflow-hidden bg-black" style={{ height: '100dvh' }}>
 
-      {/* ── 背景画像 ── */}
+      {/* ── 全画面背景画像 ── */}
       <div className="absolute inset-0">
         <Image
-          src="/assets/title_bg.png"
+          src="/assets/title_background.png"
           alt="鬼滅クイズ"
           fill
-          className="object-cover object-center"
+          className="object-cover"
+          style={{ objectPosition: 'center center' }}
           priority
         />
       </div>
 
-      {/* ── トップ：ボタン2つ（画面下部・横並び） ── */}
+      {/* ── トップ画面：ブラシストローク上に透明ボタンを重ねる ── */}
       {mode === 'top' && (
-        <>
-          <div className="absolute bottom-10 left-0 right-0 z-10 flex justify-center gap-5 px-8">
+        <div className="absolute inset-0 z-10">
 
-            {/* 赤ボタン：戦場を開く（GM） */}
-            <button
-              onClick={createRoom}
-              disabled={loading}
-              className="relative flex-1 max-w-[240px] transition-transform hover:scale-105 active:scale-95 disabled:opacity-60 disabled:pointer-events-none"
-            >
-              <Image
-                src="/assets/btn_setting_red.png"
-                alt="戦場を開く（GM）"
-                width={480}
-                height={160}
-                className="w-full h-auto drop-shadow-2xl"
-              />
-              <span
-                className="absolute inset-0 flex items-center justify-center font-brush font-bold text-base leading-tight px-2 text-center"
-                style={{
-                  color: '#fff8e8',
-                  textShadow: '0 1px 6px rgba(0,0,0,0.95), 0 0 14px rgba(0,0,0,0.8)',
-                }}
-              >
-                {loading ? '準備中...' : '⚔️ 戦場を開く\n（GM）'}
-              </span>
-            </button>
+          {/* 左ボタン「戦場を開く（GM）」
+              画像内のブラシストローク位置: x≈3.5%〜32%, y≈79%〜96% */}
+          <button
+            onClick={createRoom}
+            disabled={loading}
+            className="title-btn"
+            style={{ left: '3.5%', top: '79%', width: '29%', height: '17%' }}
+          >
+            <span className="title-btn-text" style={{ color: '#ffe8b0' }}>
+              {loading ? '準備中...' : '⚔️ 戦場を開く（GM）'}
+            </span>
+          </button>
 
-            {/* 青ボタン：戦に参加する */}
-            <button
-              onClick={() => setMode('join')}
-              className="relative flex-1 max-w-[240px] transition-transform hover:scale-105 active:scale-95"
-            >
-              <Image
-                src="/assets/btn_setting_blue.png"
-                alt="戦に参加する"
-                width={480}
-                height={160}
-                className="w-full h-auto drop-shadow-2xl"
-              />
-              <span
-                className="absolute inset-0 flex items-center justify-center font-brush font-bold text-base leading-tight px-2 text-center"
-                style={{
-                  color: '#e8f4ff',
-                  textShadow: '0 1px 6px rgba(0,0,0,0.95), 0 0 14px rgba(0,0,0,0.8)',
-                }}
-              >
-                🔥 戦に参加する
-              </span>
-            </button>
-          </div>
+          {/* 中央ボタン「戦に参加する」
+              画像内のブラシストローク位置: x≈35%〜63%, y≈79%〜96% */}
+          <button
+            onClick={() => setMode('join')}
+            className="title-btn"
+            style={{ left: '35.5%', top: '79%', width: '28%', height: '17%' }}
+          >
+            <span className="title-btn-text" style={{ color: '#c8e8ff' }}>
+              🔥 戦に参加する
+            </span>
+          </button>
 
-          {/* エラー表示 */}
           {error && (
-            <div className="absolute z-10 bottom-36 left-0 right-0 px-6">
-              <div className="max-w-sm mx-auto ornate-card rounded-xl p-3">
-                <p className="text-[#f08080] text-sm text-center font-bold font-brush">{error}</p>
-              </div>
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 ornate-card rounded-xl p-3 w-80 max-w-[90vw]">
+              <p className="text-[#f08080] text-sm text-center font-bold font-brush">{error}</p>
             </div>
           )}
-        </>
+        </div>
       )}
 
-      {/* ── 参加モード：半透明オーバーレイ + ルームコード入力 ── */}
+      {/* ── 参加モード：ブラー暗幕 + ルームコード入力 ── */}
       {mode === 'join' && (
         <div className="absolute inset-0 z-20 flex items-center justify-center px-6">
-          {/* 暗幕 */}
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-
+          <div className="absolute inset-0 bg-black/65 backdrop-blur-sm" />
           <div className="relative w-full max-w-sm space-y-3">
+
             <div className="washi-card rounded-xl p-5">
               <label className="block text-sm font-bold mb-2 text-[#5a3a10] font-brush tracking-wider">
                 合言葉（ルームコード）を入力
@@ -154,28 +127,12 @@ export default function HomePage() {
               />
             </div>
 
-            {/* 参加ボタン（青） */}
             <button
               onClick={joinRoom}
               disabled={loading || roomCode.length < 4}
-              className="relative w-full transition-transform hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:pointer-events-none"
+              className="btn-tomioka w-full py-4 rounded-xl text-lg tracking-wider"
             >
-              <Image
-                src="/assets/btn_setting_blue.png"
-                alt="参加する"
-                width={480}
-                height={160}
-                className="w-full h-auto drop-shadow-xl"
-              />
-              <span
-                className="absolute inset-0 flex items-center justify-center font-brush font-bold text-lg"
-                style={{
-                  color: '#e8f4ff',
-                  textShadow: '0 1px 6px rgba(0,0,0,0.95)',
-                }}
-              >
-                {loading ? '確認中...' : '🔥 参加する'}
-              </span>
+              {loading ? '確認中...' : '🔥 参加する'}
             </button>
 
             <button
