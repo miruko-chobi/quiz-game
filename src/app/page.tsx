@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
-import Image from 'next/image'
 
 function generateRoomCode(): string {
   return Math.random().toString(36).substring(2, 6).toUpperCase()
@@ -54,26 +53,35 @@ export default function HomePage() {
   }
 
   return (
-    <main className="relative overflow-hidden bg-black" style={{ height: '100dvh' }}>
+    <>
+      {/*
+       * ── 背景画像：position fixed で完全にビューポート基準 ──
+       *
+       * なぜ fixed にするか？
+       * iOS Safari は height: 100dvh + position: absolute の組み合わせで
+       * アドレスバーの動的リサイズにより親の高さが 0 になることがある。
+       * fixed はビューポート直接参照なので親の高さに依存せず確実に表示される。
+       * また next/image の fill よりも CSS background-image の方が
+       * iOS Safari との互換性が高い。
+       */}
+      <div
+        aria-hidden
+        style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 0,
+          backgroundImage: 'url(/assets/title_background.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center center',
+          backgroundColor: '#000',
+        }}
+      />
 
-      {/* ── 全画面背景画像 ── */}
-      <div className="absolute inset-0">
-        <Image
-          src="/assets/title_background.png"
-          alt="鬼滅クイズ"
-          fill
-          className="object-cover"
-          style={{ objectPosition: 'center center' }}
-          priority
-        />
-      </div>
-
-      {/* ── トップ画面：ブラシストローク上に透明ボタンを重ねる ── */}
+      {/* ── トップ画面：ブラシストローク上に fixed オーバーレイボタン ── */}
       {mode === 'top' && (
-        <div className="absolute inset-0 z-10">
+        <div style={{ position: 'fixed', inset: 0, zIndex: 10 }}>
 
-          {/* 左ボタン「戦場を開く（GM）」
-              画像内のブラシストローク位置: x≈3.5%〜32%, y≈79%〜96% */}
+          {/* 左ブラシストローク「戦場を開く（GM）」x: 3.5〜32%, y: 79〜96% */}
           <button
             onClick={createRoom}
             disabled={loading}
@@ -85,8 +93,7 @@ export default function HomePage() {
             </span>
           </button>
 
-          {/* 中央ボタン「戦に参加する」
-              画像内のブラシストローク位置: x≈35%〜63%, y≈79%〜96% */}
+          {/* 中央ブラシストローク「戦に参加する」x: 35.5〜63%, y: 79〜96% */}
           <button
             onClick={() => setMode('join')}
             className="title-btn"
@@ -98,17 +105,22 @@ export default function HomePage() {
           </button>
 
           {error && (
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 ornate-card rounded-xl p-3 w-80 max-w-[90vw]">
+            <div
+              style={{ position: 'absolute', bottom: '1rem', left: '50%', transform: 'translateX(-50%)' }}
+              className="ornate-card rounded-xl p-3 w-80 max-w-[90vw]"
+            >
               <p className="text-[#f08080] text-sm text-center font-bold font-brush">{error}</p>
             </div>
           )}
         </div>
       )}
 
-      {/* ── 参加モード：ブラー暗幕 + ルームコード入力 ── */}
+      {/* ── 参加モード：fixed ブラー暗幕 + ルームコード入力 ── */}
       {mode === 'join' && (
-        <div className="absolute inset-0 z-20 flex items-center justify-center px-6">
-          <div className="absolute inset-0 bg-black/65 backdrop-blur-sm" />
+        <div
+          style={{ position: 'fixed', inset: 0, zIndex: 20, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0 1.5rem' }}
+        >
+          <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }} />
           <div className="relative w-full max-w-sm space-y-3">
 
             <div className="washi-card rounded-xl p-5">
@@ -151,6 +163,9 @@ export default function HomePage() {
           </div>
         </div>
       )}
-    </main>
+
+      {/* スクロール防止用のダミー（高さを持たせてbodyがスクロールしないように） */}
+      <div style={{ height: '100dvh' }} aria-hidden />
+    </>
   )
 }
