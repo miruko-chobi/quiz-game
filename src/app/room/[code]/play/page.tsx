@@ -27,10 +27,7 @@ export default function PlayPage() {
   const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null)
 
   const loadMyAnswers = useCallback(async (pid: string) => {
-    const { data } = await supabase
-      .from('answers')
-      .select('*')
-      .eq('player_id', pid)
+    const { data } = await supabase.from('answers').select('*').eq('player_id', pid)
     setMyAnswers(data ?? [])
   }, [])
 
@@ -55,18 +52,12 @@ export default function PlayPage() {
 
     const init = async () => {
       const { data: p } = await supabase
-        .from('players')
-        .select('*')
-        .eq('id', playerId)
-        .maybeSingle()
+        .from('players').select('*').eq('id', playerId).maybeSingle()
       if (!p || cancelled) return
       setPlayer(p)
 
       const { data: room } = await supabase
-        .from('rooms')
-        .select('*')
-        .eq('code', code)
-        .maybeSingle()
+        .from('rooms').select('*').eq('code', code).maybeSingle()
       if (!room || cancelled) return
       setRoomId(room.id)
       setCurrentQuestion(room.current_question)
@@ -76,8 +67,7 @@ export default function PlayPage() {
       await loadAllPlayers(room.id)
 
       const { data: existingAnswer } = await supabase
-        .from('answers')
-        .select('*')
+        .from('answers').select('*')
         .eq('player_id', playerId)
         .eq('question_index', room.current_question)
         .maybeSingle()
@@ -153,28 +143,28 @@ export default function PlayPage() {
     setSending(false)
   }
 
+  // ── ローディング ──
   if (!player) {
     return (
-      <main className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-[#c8a252] font-brush text-lg animate-pulse">全集中...</p>
-        </div>
+      <main className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 flex items-center justify-center">
+        <p className="text-indigo-500 text-lg animate-pulse">読み込み中...</p>
       </main>
     )
   }
 
+  // ── 結果画面 ──
   if (status === 'finished') {
     return (
-      <main className="min-h-screen p-6 pb-12">
+      <main className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 p-6 pb-12">
         <div className="max-w-2xl mx-auto">
-          <h1 className="text-3xl font-extrabold text-center text-[#c8a252] mb-6 font-brush title-glow">
+          <h1 className="text-3xl font-extrabold text-center text-indigo-700 mb-6">
             🏆 最終結果発表！
           </h1>
           <ResultScreen player={player} allPlayers={allPlayers} answers={myAnswers} />
           <div className="mt-6">
             <button
               onClick={() => router.push('/')}
-              className="btn-tomioka w-full py-3 rounded-xl tracking-wider"
+              className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl transition-colors"
             >
               🏠 最初の画面に戻る
             </button>
@@ -184,28 +174,19 @@ export default function PlayPage() {
     )
   }
 
+  // ── クイズ画面 ──
   const question = QUIZ_DATA[currentQuestion]
 
   return (
-    <main className="min-h-screen p-6">
-      <div className="max-w-2xl mx-auto">
+    <main className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 p-6">
+      <div className="max-w-2xl mx-auto space-y-4">
 
         {/* ヘッダー */}
-        <div className="flex justify-between items-center mb-5">
-          <div className="flex items-center gap-2">
-            <span
-              className="text-xs px-3 py-1 rounded-full font-bold font-brush"
-              style={{ background: 'linear-gradient(135deg, #1a4228, #0d2818)', color: '#c8a252', border: '1px solid #c8a252' }}
-            >
-              第 {currentQuestion + 1} 問 / {QUIZ_DATA.length}
-            </span>
-          </div>
-          <span
-            className="text-sm font-bold text-[#c8a252] font-brush"
-            style={{ textShadow: '0 1px 4px rgba(0,0,0,0.8)' }}
-          >
-            ⚔️ {player.nickname}
+        <div className="flex justify-between items-center">
+          <span className="text-sm font-bold bg-indigo-100 text-indigo-700 rounded-full px-3 py-1">
+            第 {currentQuestion + 1} 問 / {QUIZ_DATA.length}
           </span>
+          <span className="text-sm font-bold text-gray-600">👤 {player.nickname}</span>
         </div>
 
         <QuizCard
@@ -215,29 +196,22 @@ export default function PlayPage() {
           onSelect={handleSelect}
         />
 
-        {/* 回答送信ボタン */}
+        {/* 送信ボタン */}
         {!submitted && selectedChoice !== null && (
-          <div className="mt-5">
-            <button
-              onClick={sendAnswer}
-              disabled={sending}
-              className="btn-tomioka w-full py-4 rounded-xl text-lg tracking-wider"
-            >
-              {sending ? '送信中...' : `🔥「${question.choices[selectedChoice]}」で攻める！`}
-            </button>
-            <p className="text-xs text-[#7a9a7a] text-center mt-2 font-brush">
-              ※ 送信前なら選び直せるたい
-            </p>
-          </div>
+          <button
+            onClick={sendAnswer}
+            disabled={sending}
+            className="w-full py-4 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-bold rounded-xl text-lg transition-colors"
+          >
+            {sending ? '送信中...' : `✅「${question.choices[selectedChoice]}」で回答する！`}
+          </button>
         )}
 
-        {/* 送信済み */}
+        {/* 送信済みメッセージ */}
         {submitted && (
-          <div className="mt-6 text-center ornate-card rounded-xl p-4">
-            <p className="text-[#c8a252] font-bold font-brush">⚔️ 回答を送った！</p>
-            <p className="text-sm text-[#5a3a10] mt-1 font-brush">
-              指令官が次の問題に進めるまで待っとってね
-            </p>
+          <div className="bg-white rounded-xl shadow-sm p-4 text-center">
+            <p className="text-green-600 font-bold text-lg">✅ 回答を送信しました！</p>
+            <p className="text-gray-400 text-sm mt-1">GMが次の問題に進むまでお待ちください</p>
           </div>
         )}
       </div>

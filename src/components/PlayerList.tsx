@@ -18,10 +18,10 @@ export default function PlayerList({
   const sortedPlayers = [...players].sort((a, b) => b.score - a.score)
 
   return (
-    <div className="washi-card rounded-2xl p-5">
+    <div className="bg-white rounded-2xl shadow-sm p-5">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-extrabold text-[#1a1208] font-brush tracking-wider">⚔️ 隊員一覧</h2>
-        <span className="text-sm text-[#5a3a10] font-brush">
+        <h2 className="text-lg font-extrabold text-gray-800">👥 プレイヤー一覧</h2>
+        <span className="text-sm text-gray-500">
           {answeredPlayerIds.length} / {players.length} 回答済
         </span>
       </div>
@@ -32,33 +32,22 @@ export default function PlayerList({
           return (
             <div
               key={player.id}
-              className="flex items-center justify-between p-3 rounded-xl"
-              style={
+              className={`flex items-center justify-between p-3 rounded-xl border ${
                 hasAnswered
-                  ? { background: 'rgba(26,66,40,0.12)', border: '1px solid rgba(58,138,80,0.4)' }
-                  : { background: 'rgba(26,18,8,0.06)', border: '1px solid rgba(200,162,82,0.2)' }
-              }
+                  ? 'bg-green-50 border-green-200'
+                  : 'bg-gray-50 border-gray-200'
+              }`}
             >
               <div className="flex items-center gap-3">
-                <span
-                  className="w-3 h-3 rounded-full"
-                  style={
-                    hasAnswered
-                      ? { background: '#3adc70', boxShadow: '0 0 6px #3adc70' }
-                      : { background: '#8a7a60' }
-                  }
-                />
-                <span className="font-bold text-[#1a1208] font-brush">{player.nickname}</span>
+                <span className={`w-3 h-3 rounded-full ${hasAnswered ? 'bg-green-400' : 'bg-gray-300'}`} />
+                <span className="font-bold text-gray-800">{player.nickname}</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-[#5a3a10] font-brush">
+                <span className="text-sm text-gray-500">
                   {player.score} / {currentQuestion}
                 </span>
                 {hasAnswered && (
-                  <span
-                    className="text-xs px-2 py-0.5 rounded-full font-brush font-bold"
-                    style={{ background: 'linear-gradient(135deg, #1a4228, #0d2818)', color: '#7adc8a', border: '1px solid #3a8a50' }}
-                  >
+                  <span className="text-xs px-2 py-0.5 bg-green-100 text-green-700 rounded-full font-bold">
                     回答済
                   </span>
                 )}

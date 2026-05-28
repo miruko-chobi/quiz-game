@@ -10,75 +10,49 @@ interface QuizCardProps {
   onSelect: (index: number) => void
 }
 
-// 左列（炎）：壱・参、右列（水）：弐・肆
-const CHOICE_LABELS = ['壱', '弐', '参', '肆']
-const CHOICE_ICONS  = ['🔥', '💧', '🔥', '💧']
+const CHOICE_LABELS = ['A', 'B', 'C', 'D']
 
 export default function QuizCard({ question, selectedChoice, submitted, onSelect }: QuizCardProps) {
-  // 2択は左右に並べる、4択も左右2列
-  const isTwoChoice = question.type === '2choice'
-
   return (
     <div className="w-full max-w-2xl mx-auto space-y-4">
 
-      {/* ── 問題文カード ── */}
-      <div className="ornate-card rounded-2xl p-6 relative">
-        {/* 四隅の装飾 */}
-        <span aria-hidden className="absolute top-2 left-3 text-[#c8a252] text-xs opacity-70">◆</span>
-        <span aria-hidden className="absolute top-2 right-3 text-[#c8a252] text-xs opacity-70">◆</span>
-        <span aria-hidden className="absolute bottom-2 left-3 text-[#c8a252] text-xs opacity-70">◆</span>
-        <span aria-hidden className="absolute bottom-2 right-3 text-[#c8a252] text-xs opacity-70">◆</span>
-
-        <p className="text-lg font-bold text-[#f5ede0] leading-relaxed font-brush text-center px-2 whitespace-pre-line">
+      {/* 問題文カード */}
+      <div className="bg-white rounded-2xl shadow-sm p-6">
+        <p className="text-lg font-bold text-gray-800 leading-relaxed text-center whitespace-pre-line">
           {question.question}
         </p>
         {question.image && (
-          <div className="mt-4 rounded-xl overflow-hidden border border-[#c8a252]">
+          <div className="mt-4 rounded-xl overflow-hidden">
             <Image src={question.image} alt="クイズ画像" width={600} height={300} className="w-full object-cover" />
           </div>
         )}
       </div>
 
-      {/* ── 回答ボタン群 ── */}
+      {/* 回答ボタン群 */}
       <div className="grid grid-cols-2 gap-3">
         {question.choices.map((choice, index) => {
-          const isLeft   = index % 2 === 0   // 左列 = 炎
-          const base     = isLeft ? 'btn-fire' : 'btn-water'
           const isSelected = selectedChoice === index
-
-          let cls = `${base} flex items-center gap-2 p-4 rounded-xl text-left font-bold w-full`
-          if (isSelected) cls += ' selected'
-          if (submitted)  cls += ' submitted'
-          // 2択の場合は1行で横並び
-          if (isTwoChoice && question.choices.length === 2) {
-            cls += ' justify-center text-center'
-          }
-
           return (
             <button
               key={index}
-              className={cls}
+              className={`flex items-center gap-2 p-4 rounded-xl text-left font-bold w-full transition-all ${
+                isSelected
+                  ? 'bg-indigo-600 text-white shadow-md'
+                  : submitted
+                  ? 'bg-gray-100 text-gray-400 opacity-50 cursor-default'
+                  : 'bg-white border-2 border-gray-200 text-gray-800 hover:border-indigo-400 hover:bg-indigo-50'
+              }`}
               onClick={() => !submitted && onSelect(index)}
               disabled={submitted}
             >
-              {/* ラベル丸 */}
-              <span
-                className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center font-extrabold text-sm font-brush"
-                style={{
-                  background: isSelected
-                    ? 'rgba(255,255,255,0.2)'
-                    : isLeft
-                      ? 'rgba(180, 60, 20, 0.4)'
-                      : 'rgba(20, 80, 160, 0.4)',
-                  border: isLeft ? '1px solid #e07030' : '1px solid #3a80c0',
-                  color: isLeft ? '#f8d080' : '#80c0f0',
-                }}
-              >
+              <span className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-extrabold text-sm ${
+                isSelected
+                  ? 'bg-white text-indigo-600'
+                  : 'bg-indigo-100 text-indigo-700'
+              }`}>
                 {CHOICE_LABELS[index]}
               </span>
-              <span className="font-brush text-sm leading-snug flex-1">
-                {CHOICE_ICONS[index]} {choice}
-              </span>
+              <span className="text-sm leading-snug flex-1">{choice}</span>
             </button>
           )
         })}
