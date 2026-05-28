@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import Image from 'next/image'
 
 function generateRoomCode(): string {
   return Math.random().toString(36).substring(2, 6).toUpperCase()
@@ -53,102 +54,90 @@ export default function HomePage() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
+    <main className="relative min-h-screen overflow-hidden">
 
-      {/* ── 右半分オーバーレイ（冨岡カラー） ── */}
-      <div className="fixed inset-0 pointer-events-none z-0" aria-hidden>
-        {/* 右半分を深えんじ色で染める */}
-        <div className="absolute right-0 top-0 w-1/2 h-full"
-          style={{ background: 'linear-gradient(to right, transparent 0%, #2d0810 25%)' }} />
-        {/* 右半分に亀甲ラティス */}
-        <div className="absolute right-0 top-0 w-1/2 h-full"
-          style={{
-            backgroundImage:
-              'linear-gradient(45deg, rgba(200,162,82,0.16) 2px, transparent 2px), linear-gradient(-45deg, rgba(200,162,82,0.16) 2px, transparent 2px)',
-            backgroundSize: '22px 22px',
-          }} />
-        {/* 左右の境界グロー */}
-        <div className="absolute left-1/2 top-0 h-full w-px -translate-x-px"
-          style={{ background: 'linear-gradient(to bottom, transparent 0%, #c8a252 20%, #e8d080 50%, #c8a252 80%, transparent 100%)', opacity: 0.5 }} />
+      {/* ── 背景画像 ── */}
+      <div className="absolute inset-0">
+        <Image
+          src="/assets/title_bg.png"
+          alt="鬼滅クイズ"
+          fill
+          className="object-cover object-center"
+          priority
+        />
       </div>
 
-      {/* ── 背景装飾漢字 ── */}
-      <div aria-hidden className="fixed pointer-events-none select-none z-0"
-        style={{ left: '4%', top: '50%', transform: 'translateY(-50%)', fontSize: '22rem', lineHeight: 1, fontFamily: "'Shippori Mincho B1', serif", fontWeight: 800, color: 'rgba(255,255,255,0.035)' }}>
-        炎
-      </div>
-      <div aria-hidden className="fixed pointer-events-none select-none z-0"
-        style={{ right: '3%', top: '50%', transform: 'translateY(-50%)', fontSize: '22rem', lineHeight: 1, fontFamily: "'Shippori Mincho B1', serif", fontWeight: 800, color: 'rgba(106,180,212,0.06)' }}>
-        凪
-      </div>
+      {/* ── トップ：ボタン2つ（画面下部・横並び） ── */}
+      {mode === 'top' && (
+        <>
+          <div className="absolute bottom-10 left-0 right-0 z-10 flex justify-center gap-5 px-8">
 
-      {/* ── 中央の刀 ── */}
-      <div aria-hidden className="fixed left-1/2 top-0 bottom-0 -translate-x-1/2 flex flex-col items-center z-[1] pointer-events-none">
-        {/* 刃先 */}
-        <div style={{ width: 3, height: '18vh', background: 'linear-gradient(to bottom, transparent, #c8a252 80%)' }} />
-        {/* 刀身 上 */}
-        <div style={{ width: 3, height: '22vh', background: 'linear-gradient(to bottom, #c8a252, #e8d880 30%, #c8a090 70%, #b07830)' }} />
-        {/* 鍔（つば） */}
-        <div style={{
-          width: 36, height: 36, borderRadius: '50%',
-          background: 'radial-gradient(circle, #e8c860 0%, #b08020 50%, #604010 100%)',
-          border: '2px solid #e8d060',
-          boxShadow: '0 0 10px rgba(200,162,82,0.7), 0 0 24px rgba(200,162,82,0.3)',
-          flexShrink: 0,
-        }} />
-        {/* 柄（つか） */}
-        <div style={{
-          width: 5, flexGrow: 1,
-          background: 'repeating-linear-gradient(135deg, #3a1a04 0px, #3a1a04 4px, #6a3010 4px, #6a3010 8px)',
-          maxHeight: '35vh',
-        }} />
-        {/* 柄頭 */}
-        <div style={{
-          width: 14, height: 14, borderRadius: '50%',
-          background: 'radial-gradient(circle, #c8a252 0%, #7a5010 100%)',
-          flexShrink: 0, marginBottom: '10vh',
-        }} />
-      </div>
-
-      {/* ── メインコンテンツ ── */}
-      <div className="relative z-10 w-full max-w-sm px-6 space-y-5">
-
-        {/* タイトル */}
-        <div className="text-center mb-8">
-          <div className="text-xs tracking-[0.4em] text-[#c8a252] mb-3 font-brush">
-            ― 鬼殺隊　公認 ―
-          </div>
-          <h1 className="text-6xl font-extrabold title-glow font-brush mb-3 leading-tight">
-            鬼滅クイズ
-          </h1>
-          <div className="kimetsu-divider text-xs my-3">
-            <span className="text-[#c8a252]">⚔️</span>
-          </div>
-          <p className="text-[#c8a252] text-sm tracking-widest font-brush">
-            鬼の頸を斬れ！
-          </p>
-        </div>
-
-        {mode === 'top' && (
-          <div className="space-y-3">
+            {/* 赤ボタン：戦場を開く（GM） */}
             <button
               onClick={createRoom}
               disabled={loading}
-              className="btn-tanjiro w-full py-4 rounded-xl text-lg tracking-wider"
+              className="relative flex-1 max-w-[240px] transition-transform hover:scale-105 active:scale-95 disabled:opacity-60 disabled:pointer-events-none"
             >
-              {loading ? '戦場を準備中...' : '⚔️ 戦場を開く（GM）'}
+              <Image
+                src="/assets/btn_setting_red.png"
+                alt="戦場を開く（GM）"
+                width={480}
+                height={160}
+                className="w-full h-auto drop-shadow-2xl"
+              />
+              <span
+                className="absolute inset-0 flex items-center justify-center font-brush font-bold text-base leading-tight px-2 text-center"
+                style={{
+                  color: '#fff8e8',
+                  textShadow: '0 1px 6px rgba(0,0,0,0.95), 0 0 14px rgba(0,0,0,0.8)',
+                }}
+              >
+                {loading ? '準備中...' : '⚔️ 戦場を開く\n（GM）'}
+              </span>
             </button>
+
+            {/* 青ボタン：戦に参加する */}
             <button
               onClick={() => setMode('join')}
-              className="btn-tomioka w-full py-4 rounded-xl text-lg tracking-wider"
+              className="relative flex-1 max-w-[240px] transition-transform hover:scale-105 active:scale-95"
             >
-              🔥 戦に参加する
+              <Image
+                src="/assets/btn_setting_blue.png"
+                alt="戦に参加する"
+                width={480}
+                height={160}
+                className="w-full h-auto drop-shadow-2xl"
+              />
+              <span
+                className="absolute inset-0 flex items-center justify-center font-brush font-bold text-base leading-tight px-2 text-center"
+                style={{
+                  color: '#e8f4ff',
+                  textShadow: '0 1px 6px rgba(0,0,0,0.95), 0 0 14px rgba(0,0,0,0.8)',
+                }}
+              >
+                🔥 戦に参加する
+              </span>
             </button>
           </div>
-        )}
 
-        {mode === 'join' && (
-          <div className="space-y-3">
+          {/* エラー表示 */}
+          {error && (
+            <div className="absolute z-10 bottom-36 left-0 right-0 px-6">
+              <div className="max-w-sm mx-auto ornate-card rounded-xl p-3">
+                <p className="text-[#f08080] text-sm text-center font-bold font-brush">{error}</p>
+              </div>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* ── 参加モード：半透明オーバーレイ + ルームコード入力 ── */}
+      {mode === 'join' && (
+        <div className="absolute inset-0 z-20 flex items-center justify-center px-6">
+          {/* 暗幕 */}
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+
+          <div className="relative w-full max-w-sm space-y-3">
             <div className="washi-card rounded-xl p-5">
               <label className="block text-sm font-bold mb-2 text-[#5a3a10] font-brush tracking-wider">
                 合言葉（ルームコード）を入力
@@ -161,32 +150,50 @@ export default function HomePage() {
                 onKeyDown={(e) => e.key === 'Enter' && joinRoom()}
                 placeholder="XXXX"
                 className="washi-input w-full text-center text-4xl font-extrabold tracking-[0.4em] rounded-lg p-3"
+                autoFocus
               />
             </div>
+
+            {/* 参加ボタン（青） */}
             <button
               onClick={joinRoom}
               disabled={loading || roomCode.length < 4}
-              className="btn-tomioka w-full py-4 rounded-xl text-lg tracking-wider"
+              className="relative w-full transition-transform hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:pointer-events-none"
             >
-              {loading ? '確認中...' : '🔥 参加する'}
+              <Image
+                src="/assets/btn_setting_blue.png"
+                alt="参加する"
+                width={480}
+                height={160}
+                className="w-full h-auto drop-shadow-xl"
+              />
+              <span
+                className="absolute inset-0 flex items-center justify-center font-brush font-bold text-lg"
+                style={{
+                  color: '#e8f4ff',
+                  textShadow: '0 1px 6px rgba(0,0,0,0.95)',
+                }}
+              >
+                {loading ? '確認中...' : '🔥 参加する'}
+              </span>
             </button>
+
             <button
               onClick={() => { setMode('top'); setError('') }}
-              className="w-full py-3 text-[#c8a252] text-sm hover:text-[#e8d080] transition-colors font-brush tracking-wider"
+              className="w-full py-3 font-brush tracking-wider text-sm hover:opacity-80 transition-opacity"
+              style={{ color: '#f5ede0', textShadow: '0 1px 4px rgba(0,0,0,0.9)' }}
             >
               ← 戻る
             </button>
-          </div>
-        )}
 
-        {error && (
-          <div className="ornate-card rounded-xl p-3">
-            <p className="text-[#f08080] text-sm text-center font-bold font-brush">{error}</p>
+            {error && (
+              <div className="ornate-card rounded-xl p-3">
+                <p className="text-[#f08080] text-sm text-center font-bold font-brush">{error}</p>
+              </div>
+            )}
           </div>
-        )}
-
-        <p className="text-center text-[#2a4a2a] text-xs font-brush tracking-wider">全集中の呼吸で挑め</p>
-      </div>
+        </div>
+      )}
     </main>
   )
 }
