@@ -13,12 +13,25 @@ body {
   min-height: 100vh;
 }
 
-/* ===== 和紙カード ===== */
+/* ===== 和紙カード（待機・参加画面用） ===== */
 .washi-card {
   background: linear-gradient(145deg, #f5ede0 0%, #ece0c8 60%, #e2d4b8 100%);
   color: #1a1208;
   border: 1.5px solid #c8a252;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* ===== 暗い装飾カード（クイズ・メイン画面用） ===== */
+.ornate-card {
+  background: linear-gradient(145deg, #160c04 0%, #0e0808 100%);
+  color: #f5ede0;
+  /* 二重金縁 */
+  border: 2px solid #c8a252;
+  box-shadow:
+    0 0 0 1px rgba(80, 45, 5, 0.7),
+    0 0 0 5px rgba(8, 4, 1, 0.95),
+    0 0 0 7px rgba(200, 162, 82, 0.35),
+    0 8px 40px rgba(0, 0, 0, 0.95);
 }
 
 /* ===== フォント ===== */
@@ -79,49 +92,58 @@ body {
   cursor: not-allowed;
 }
 
-/* ===== 選択肢ボタン ===== */
-.choice-btn {
-  background: linear-gradient(145deg, #f5ede0, #ece0c8);
-  color: #1a1208;
-  border: 1.5px solid #c8a252;
+/* ===== 炎ボタン（クイズ：左列） ===== */
+.btn-fire {
+  background: linear-gradient(145deg, #6a1506 0%, #a82010 60%, #6a1506 100%);
+  color: #f8d8b0;
+  border: 1.5px solid #d05820;
   font-family: 'Shippori Mincho B1', serif;
+  font-weight: 700;
   transition: all 0.15s ease;
+  box-shadow: 0 3px 14px rgba(160, 32, 16, 0.5);
 }
-.choice-btn:hover:not(:disabled) {
-  background: linear-gradient(145deg, #ece4d0, #e0d0b8);
-  border-color: #8c1c2f;
-  box-shadow: 0 0 0 2px rgba(140, 28, 47, 0.25);
+.btn-fire:hover:not(:disabled) {
+  background: linear-gradient(145deg, #8a2008 0%, #c82810 60%, #8a2008 100%);
+  box-shadow: 0 3px 22px rgba(200, 50, 20, 0.75);
+  transform: translateY(-1px);
 }
-.choice-btn.selected {
-  background: linear-gradient(145deg, #8c1c2f, #6b1424);
-  color: #f5ede0;
-  border-color: #c8a252;
-  box-shadow: 0 0 0 2px rgba(200, 162, 82, 0.4);
+.btn-fire.selected {
+  background: linear-gradient(145deg, #c83010, #901c08);
+  border-color: #f8c060;
+  box-shadow: 0 0 0 2px rgba(248, 192, 96, 0.5), 0 3px 22px rgba(200, 80, 20, 0.9);
 }
-.choice-btn.submitted {
-  opacity: 0.7;
-  cursor: default;
+.btn-fire.submitted:not(.selected) { opacity: 0.45; cursor: default; }
+.btn-fire.submitted.selected       { opacity: 1; cursor: default; }
+.btn-fire:disabled { cursor: default; }
+
+/* ===== 水ボタン（クイズ：右列） ===== */
+.btn-water {
+  background: linear-gradient(145deg, #062040 0%, #0d3868 60%, #062040 100%);
+  color: #a8d8f8;
+  border: 1.5px solid #2a68a0;
+  font-family: 'Shippori Mincho B1', serif;
+  font-weight: 700;
+  transition: all 0.15s ease;
+  box-shadow: 0 3px 14px rgba(14, 56, 104, 0.5);
 }
-.choice-btn.submitted.selected {
-  opacity: 1;
+.btn-water:hover:not(:disabled) {
+  background: linear-gradient(145deg, #082a54 0%, #124880 60%, #082a54 100%);
+  box-shadow: 0 3px 22px rgba(20, 80, 160, 0.75);
+  transform: translateY(-1px);
 }
+.btn-water.selected {
+  background: linear-gradient(145deg, #1a50a8, #0c2868);
+  border-color: #60a8e8;
+  box-shadow: 0 0 0 2px rgba(96, 168, 232, 0.5), 0 3px 22px rgba(40, 120, 210, 0.9);
+}
+.btn-water.submitted:not(.selected) { opacity: 0.45; cursor: default; }
+.btn-water.submitted.selected       { opacity: 1; cursor: default; }
+.btn-water:disabled { cursor: default; }
 
 /* ===== ステータスバッジ ===== */
-.badge-waiting {
-  background: linear-gradient(135deg, #7a5800, #5a4000);
-  color: #f0d070;
-  border: 1px solid #c8a252;
-}
-.badge-playing {
-  background: linear-gradient(135deg, #1a4228, #0d2818);
-  color: #7adda0;
-  border: 1px solid #3a8a50;
-}
-.badge-finished {
-  background: linear-gradient(135deg, #2a1a1a, #1a1010);
-  color: #a0a0a0;
-  border: 1px solid #505050;
-}
+.badge-waiting  { background: linear-gradient(135deg, #7a5800, #5a4000); color: #f0d070; border: 1px solid #c8a252; }
+.badge-playing  { background: linear-gradient(135deg, #1a4228, #0d2818); color: #7adda0; border: 1px solid #3a8a50; }
+.badge-finished { background: linear-gradient(135deg, #2a1a1a, #1a1010); color: #a0a0a0; border: 1px solid #505050; }
 
 /* ===== 入力フィールド ===== */
 .washi-input {
@@ -135,9 +157,7 @@ body {
   border-color: #8c1c2f;
   box-shadow: 0 0 0 3px rgba(140, 28, 47, 0.2);
 }
-.washi-input::placeholder {
-  color: #8a7a60;
-}
+.washi-input::placeholder { color: #8a7a60; }
 
 /* ===== 装飾セパレーター ===== */
 .kimetsu-divider {
@@ -158,3 +178,10 @@ body {
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: #0d1a0e; }
 ::-webkit-scrollbar-thumb { background: #1a4228; border-radius: 3px; }
+
+/* ===== 問題番号バッジ ===== */
+.question-badge {
+  background: linear-gradient(135deg, #1a4228, #0d2818);
+  color: #c8a252;
+  border: 1px solid #c8a252;
+}

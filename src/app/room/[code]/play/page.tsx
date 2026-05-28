@@ -233,8 +233,8 @@ export default function PlayPage() {
 
         {/* 送信済み */}
         {submitted && (
-          <div className="mt-6 text-center washi-card rounded-xl p-4">
-            <p className="text-[#1a4228] font-bold font-brush">⚔️ 回答を送った！</p>
+          <div className="mt-6 text-center ornate-card rounded-xl p-4">
+            <p className="text-[#c8a252] font-bold font-brush">⚔️ 回答を送った！</p>
             <p className="text-sm text-[#5a3a10] mt-1 font-brush">
               指令官が次の問題に進めるまで待っとってね
             </p>
