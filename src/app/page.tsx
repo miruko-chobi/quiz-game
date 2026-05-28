@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import Image from 'next/image'
 
 function generateRoomCode(): string {
   return Math.random().toString(36).substring(2, 6).toUpperCase()
@@ -55,27 +56,27 @@ export default function HomePage() {
   return (
     <>
       {/*
-       * ── 背景画像：position fixed で完全にビューポート基準 ──
+       * ── 背景画像：position fixed + next/image で iOS 完全対応 ──
        *
-       * なぜ fixed にするか？
-       * iOS Safari は height: 100dvh + position: absolute の組み合わせで
-       * アドレスバーの動的リサイズにより親の高さが 0 になることがある。
-       * fixed はビューポート直接参照なので親の高さに依存せず確実に表示される。
-       * また next/image の fill よりも CSS background-image の方が
-       * iOS Safari との互換性が高い。
+       * ポイント：
+       * 1. fixed コンテナ → ビューポート直参照、親の height: dvh 問題を回避
+       * 2. next/image → 9.6MB の PNG を自動で WebP 変換＋モバイル用にリサイズ
+       *    iOS Safari は CSS background-image で 5MB 超の画像を無視する場合がある
+       * 3. sizes="100vw" → ビューポート幅に合わせた最適サイズを配信
        */}
       <div
         aria-hidden
-        style={{
-          position: 'fixed',
-          inset: 0,
-          zIndex: 0,
-          backgroundImage: 'url(/assets/title_background.png)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center center',
-          backgroundColor: '#000',
-        }}
-      />
+        style={{ position: 'fixed', inset: 0, zIndex: 0 }}
+      >
+        <Image
+          src="/assets/title_background.png"
+          alt=""
+          fill
+          className="object-cover"
+          priority
+          sizes="100vw"
+        />
+      </div>
 
       {/* ── トップ画面：ブラシストローク上に fixed オーバーレイボタン ── */}
       {mode === 'top' && (
